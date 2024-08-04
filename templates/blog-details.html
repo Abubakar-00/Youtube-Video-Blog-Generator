@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Post Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        h2 {
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+        }
+        
+        .justified-paragraph {
+        text-align: justify;
+        margin-bottom: 1em;
+        }
+    </style>
+
+</head>
+<body class="bg-grat-100 font-sans antialiased">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 p-4 text-white flex justify-between">
+        <div>
+            <h1 class="text-3xl font-bold">AI Blog Generator</h1>
+        </div>
+        <div>
+            <a href="/" class="text-white hover:underline mx-4">Generate</a>
+            <a href="/blog-list" class="text-white hover:underline mx-4">Saved Blog Posts</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto mt-10 px-4 sm:px-0">
+        <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
+            <section>
+                <h2 class="text-xl mb-4 font-semibold">Blog Post Details</h2>
+                <div class="border border-gray-300 p-4 rounded-lg">
+                    <h3 class="text-lg font-semibold">{{blog_article_detail.youtube_title}}</h3>
+                    
+                    <div id="formatted-content" class="text-gray-700"></div>
+                    
+                    <hr class="my-4 border-gray-300">
+                    <h4 class="text-lg font-semibold">Youtube Title</h4>
+                    <p class="text-gray-700">{{blog_article_detail.youtube_title}}</p>
+                    <h4 class="text-lg font-semibold mt-4">Youtube Link</h4>
+                    <a href="{{blog_article_detail.youtube_link}}" class="text-blue-600 hover:underline">{{blog_article_detail.youtube_link}}</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer class="text-center p-4 text-blacl mt-6">
+        Powered by <a href="#">Abubakar Ai</a>
+    </footer>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let content = `{{ blog_article_detail.generated_content|escapejs }}`;
+            
+            function formatContent(content) {
+                // Split content by double newlines to separate paragraphs
+                let paragraphs = content.split('\n\n');
+                
+                let formattedContent = '';
+                
+                paragraphs.forEach((paragraph) => {
+                    // Check if the paragraph is a heading
+                    if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
+                        // Remove asterisks and wrap in h2 tags
+                        formattedContent += `<h2>${paragraph.slice(2, -2)}</h2>`;
+                    } else {
+                        // Wrap regular paragraphs in p tags
+                        formattedContent += `<p class="justified-paragraph">${paragraph}</p>`;
+                    }
+                });
+                
+                return formattedContent;
+            }
+            
+            // Format the content
+            let formattedContent = formatContent(content);
+            
+            // Display the formatted content
+            document.getElementById('formatted-content').innerHTML = formattedContent;
+        });
+    </script>
+
+</body>
+</html>
